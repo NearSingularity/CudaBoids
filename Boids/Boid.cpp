@@ -1,5 +1,5 @@
-#include "Boid.h"
 #include "GL\glew.h"
+#include "Boid.h"
 #include <assert.h>
 
 #define POS_LOC		0
@@ -8,9 +8,18 @@
 #define WVP_LOC		3
 #define WORLD_LOC	7
 
-Boid::Boid(GLuint tex, int i)
+//Current Velocity
+//Steering Force 
+//Summation of one force with three 'laws' to act on current velocity
+
+Boid2D::Boid2D()
 {
-	pos = Vec2(rand() % SCREEN_H, rand() % SCREEN_H);
+
+}
+Boid2D::Boid2D(GLuint tex, int i)
+{
+	//transition to 3d
+	pos = Vec2((float)(rand() % SCREEN_H),(float)(rand() % SCREEN_H));
 	//vel = Vec2(rand() % 10, rand() % 10);
 	maxVel = Vec2(10, 10);
 
@@ -24,10 +33,9 @@ Boid::Boid(GLuint tex, int i)
 	r = 3;
 
 	index = i;
-	m_VAO = 0;
 }
 
-Boid::Boid(GLuint tex, Vec2 p, int i)
+Boid2D::Boid2D(GLuint tex, Vec2 p, int i)
 {
 	texture = tex;
 	pos = p;
@@ -46,12 +54,17 @@ Boid::Boid(GLuint tex, Vec2 p, int i)
 	index = i;
 }
 
-Boid::~Boid()
+Boid2D::Boid2D(GLuint tex, Vec3 p, int i)
 {
 
 }
 
-void Boid::Clear()
+Boid2D::~Boid2D()
+{
+
+}
+
+void Boid2D::Clear()
 {
 	if(m_Buffers[0] != 0)
 		glDeleteBuffers(ARRAY_SIZE_IN_ELEMENTS(m_Buffers), m_Buffers);
@@ -62,70 +75,60 @@ void Boid::Clear()
 	}
 }
 
-bool Boid::InitMesh()
+bool Boid2D::InitMesh()
 {
-	
+	return false;
 }
 
-bool Boid::LoadMesh()
+bool Boid2D::LoadMesh()
 {
 	bool flag = false;
-	Clear();
-
-	//create VAO
-	glGenVertexArrays(1, &m_VAO);
-	glBindVertexArray(m_VAO);
-	//create buffer for vertice attributes
-	glGenBuffers(ARRAY_SIZE_IN_ELEMENTS(m_Buffers), m_Buffers);
-
-	flag = InitMesh();
-
-	glBindVertexArray(0);
 
 	return flag;
 
 }
 
-void Boid::AddForce(Vec2 force)
+void Boid2D::AddForce(Vec2 force)
 {
 	//acc += force / mass;
 	acc += force;
 }
 
-void Boid::UpdateVelocity()
+void Boid2D::UpdateVelocity()
 {
 
 }
 
-void Boid::Update()
+void Boid2D::Update()
 {
-	UpdateVelocity();
+	//update shader
+	//
 }
 
-void Boid::Seek(Vec2 target)
+void Boid2D::Seek(Vec2 target)
 {
 	acc += Steer(target, false);
 }
 
-void Boid::Avoid(Vec2 target)
+void Boid2D::Avoid(Vec2 target)
 {
 	acc -= Steer(target, false);
 }
 
-void Boid::Arrive(Vec2 target)
+void Boid2D::Arrive(Vec2 target)
 {
 	acc += Steer(target, true);
 }
 
 //Steer to avoid crowding local flockmates
-Vec2 Boid::Separate(Boid* boids[MAX_BOIDS])
+Vec2 Boid2D::Separate(Boid2D* boids[MAX_BOIDS])
 {
 	Vec2 steer = Vec2(0,0);
 	int count = 0;
 
 	for(int i = 0; i < MAX_BOIDS; i++)
 	{
-		Boid *other = boids[i];
+		Boid2D *other = boids[i];
 
 		if(other->index != index)
 		{
@@ -151,14 +154,14 @@ Vec2 Boid::Separate(Boid* boids[MAX_BOIDS])
 	return steer;
 }
 
-Vec2 Boid::Align(Boid* boids[MAX_BOIDS])
+Vec2 Boid2D::Align(Boid2D* boids[MAX_BOIDS])
 {
 	Vec2 steer = Vec2(0,0);
 	int count = 0;
 
 	for(int i = 0; i < MAX_BOIDS; i++)
 	{
-		Boid* other = boids[i];
+		Boid2D* other = boids[i];
 
 		if(other->index != index)
 		{
@@ -180,14 +183,14 @@ Vec2 Boid::Align(Boid* boids[MAX_BOIDS])
 	return steer;
 }
 
-Vec2 Boid::Cohesion(Boid* boids[MAX_BOIDS])
+Vec2 Boid2D::Cohesion(Boid2D* boids[MAX_BOIDS])
 {
 	Vec2 steer = Vec2(0,0);
 	int count = 0;
 
 	for (int i = 0; i < MAX_BOIDS; i++)
 	{
-		Boid* other = boids[i];
+		Boid2D* other = boids[i];
 
 		if(other->index != index)
 		{
@@ -210,7 +213,7 @@ Vec2 Boid::Cohesion(Boid* boids[MAX_BOIDS])
 	return distance;
 }
 
-void Boid::Flock(Boid* boids[MAX_BOIDS], float& s, float& a, float& c)
+void Boid2D::Flock(Boid2D* boids[MAX_BOIDS], float& s, float& a, float& c)
 {
 	Vec2 sep = Separate(boids);
 	Vec2 ali = Align(boids);
@@ -224,7 +227,7 @@ void Boid::Flock(Boid* boids[MAX_BOIDS], float& s, float& a, float& c)
 }
 
 
-Vec2 Boid::Steer(Vec2 target, bool slow)
+Vec2 Boid2D::Steer(Vec2 target, bool slow)
 {
 	Vec2 steer;
 	Vec2 dest = target - pos;
@@ -248,7 +251,7 @@ Vec2 Boid::Steer(Vec2 target, bool slow)
 	return steer;
 }
 
-void Boid::Update(Boid* boids[MAX_BOIDS], float& s, float& a, float& c)
+void Boid2D::Update(Boid2D* boids[MAX_BOIDS], float& s, float& a, float& c)
 {
 	Flock(boids, s, a, c);
 	//normalize acceleration
@@ -273,10 +276,10 @@ void Boid::Update(Boid* boids[MAX_BOIDS], float& s, float& a, float& c)
 		vel.x = -1;
 #endif
 #if WRAP
-		pos.x = SCREEN_W;
+		pos.x = SCREEN_WIDTH;
 #endif
 	}
-	if(pos.x >= SCREEN_W)
+	if(pos.x >= SCREEN_WIDTH)
 	{
 #if BOUNCE
 		vel.x = -1;
@@ -291,10 +294,10 @@ void Boid::Update(Boid* boids[MAX_BOIDS], float& s, float& a, float& c)
 		vel.y *= -1;
 #endif
 #if WRAP
-		pos.y = SCREEN_H;
+		pos.y = SCREEN_HEIGHT;
 #endif
 	}
-	if(pos.y > SCREEN_H)
+	if(pos.y > SCREEN_HEIGHT)
 	{
 #if BOUNCE
 		vel.y = -vel.y;

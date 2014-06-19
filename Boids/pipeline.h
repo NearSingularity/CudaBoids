@@ -55,7 +55,7 @@ public:
 	{
 		m_persProj = p;
 	}
-/*
+	/*
     void SetPerspectiveProj(float FOV, float Width, float Height, float zNear, float zFar)
     {
         m_persProj.FOV    = FOV;
@@ -73,7 +73,7 @@ public:
     }
 
 	const Matrix4* GetTrans();
-	const Matrix4& GetWVPTrans();
+	const Matrix4& GetVPTrans();
     const Matrix4& GetWorldTrans();
 
 private:

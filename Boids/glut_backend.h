@@ -19,6 +19,9 @@
 #ifndef GLUT_BACKEND_H
 #define	GLUT_BACKEND_H
 
+#define W 1024
+#define H 768
+
 #include "callbacks.h"
 
 void GLUTBackendInit(int argc, char** argv);

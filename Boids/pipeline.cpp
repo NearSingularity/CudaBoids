@@ -28,6 +28,10 @@ const Matrix4* Pipeline::GetTrans()
     CameraTranslationTrans.InitTranslationTransform(-m_camera.Pos.x, -m_camera.Pos.y, -m_camera.Pos.z);
     CameraRotateTrans.InitCameraTransform(m_camera.Target, m_camera.Up);
     PersProjTrans.InitPersProjTransform(m_persProj.FOV, m_persProj.width, m_persProj.height, m_persProj.zNear, m_persProj.zFar);
+	//Same as GetWorldTrans();
+	//		  GetVPTrans();
+	//m_WVP = m_VPTrans * m_WordTrans;
+
 
     m_transformation = PersProjTrans * CameraRotateTrans * CameraTranslationTrans * TranslationTrans * RotateTrans * ScaleTrans;
     return &m_transformation;
@@ -46,7 +50,7 @@ const Matrix4& Pipeline::GetWorldTrans()
     return m_WorldTransformation;
 }
 
-const Matrix4& Pipeline::GetWVPTrans()
+const Matrix4& Pipeline::GetVPTrans()
 {
     GetWorldTrans();
 
@@ -54,7 +58,7 @@ const Matrix4& Pipeline::GetWVPTrans()
 
     CameraTranslationTrans.InitTranslationTransform(-m_camera.Pos.x, -m_camera.Pos.y, -m_camera.Pos.z);
     CameraRotateTrans.InitCameraTransform(m_camera.Target, m_camera.Up);
-    //PersProjTrans.InitPersProjTransform(m_persProjInfo);
+    PersProjTrans.InitPersProjTransform(m_persProj);
 
     m_WVPtransformation = PersProjTrans * CameraRotateTrans * CameraTranslationTrans * m_WorldTransformation;
     return m_WVPtransformation;

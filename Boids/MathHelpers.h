@@ -1,13 +1,14 @@
 #pragma once
-
-#include <stdio.h>
 #define _USE_MATH_DEFINES
+//#include <glm\glm.hpp>
+//#include <glm\gtc\matrix_transform.hpp>
+//#include <glm\gtc\type_ptr.hpp>
+#include <stdio.h>
 #include <math.h>
 
 
 #define ToRadian(x) (float)(((x) * M_PI / 180.0f))
 #define ToDegree(x) (float)(((x) * 180.0f / M_PI))
-
 
 float RandomFloat();
 
@@ -48,7 +49,6 @@ Vec2 operator*(const Vec2 &v, float s);
 Vec2 operator*(float s, const Vec2 &v);
 Vec2 operator/(const Vec2 &v, float s);
 float dot(const Vec2 &v0, const Vec2 &v1);
-
 
 struct Vec3 {
 	float x, y, z;

@@ -1,5 +1,4 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 #include "MathHelpers.h"
 
 class Camera
@@ -30,9 +29,7 @@ private:
 	Vec3 m_Pos, m_Target, m_Up;
 	Vec2 m_MousePos;
 
-	float m_Speed, m_AngleHorizontal, m_AngleVertical;
+	float m_Speed, m_AngleHorizontal, m_AngleVertical, zNear, zFar;
 	int m_WindowHeight, m_WindowWidth;
 	bool m_OnUpperEdge, m_OnLowerEdge, m_OnLeftEdge, m_OnRightEdge;
 };
-
-#endif

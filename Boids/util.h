@@ -31,8 +31,37 @@
 
 #define ARRAY_SIZE_IN_ELEMENTS(a) (sizeof(a)/sizeof(a[0]))
 
+#define SCREEN_WIDTH	1024	//* added for own use |
+#define SCREEN_HEIGHT	720		//					  v
+
+#define TURNING_SPEED	M_PI/32 
+#define MAX_SPEED		5		
+
+#define Square(x) ((x)*(x))	
+
+typedef struct {
+	float x, y, z;		//Vec3 pos
+	float vX, vY, vZ;	//Vec3 vel
+	float fx, fy, fz;	//Vec3 fPos
+} Boid;
+
+typedef struct {
+	float x, y, z;		//Vec3 pos
+} Point;
+
+typedef struct {
+	int width, height, depth, n, eps;
+	float dt;
+	char *intensity;
+	Point *attractors;
+	Boid *boids;
+}Sim;
+								 //                    ^
+void Simulate(Sim* simulation);  //* added for own use |
+
 #ifdef WIN32
 #define SNPRINTF _snprintf_s
+#define VSPRINTF vsprintf_s
 #define RANDOM rand
 #define SRANDOM srand((unsigned)time(NULL))
 #else
@@ -44,7 +73,7 @@
 
 #define SAFE_DELETE(p) if (p) { delete p; p = NULL; }
 
-#define GLExitIfError()                                                          \
+#define GLExitIfError()                                                         \
 {                                                                               \
     GLenum Error = glGetError();                                                \
                                                                                 \

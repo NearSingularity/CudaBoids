@@ -12,6 +12,10 @@ Camera::Camera(int width, int height)
 	m_Target		= Vec3(0.0f, 0.0f, 1.0f);
 	m_Up			= Vec3(0.0f, 1.0f, 0.0f);
 	m_Speed			= .1f;
+	zNear			= .5f;
+	zFar			= 100.0f;
+
+	Init();
 }
 
 Camera::Camera(int width, int height, const Vec3& pos, const Vec3& targ, const Vec3& up)
@@ -31,11 +35,12 @@ Camera::Camera(int width, int height, const Vec3& pos, const Vec3& targ, const V
 
 void Camera::Init()
 {
-	Vec3 target(m_Target.x, 0.0, m_Target.z);
+	Vec3 target(m_Target.x, m_Target.y, m_Target.z);
 	target.Normalize();
 
 	if(target.z >= 0.0f)
 	{
+		//Checks to see where target is on X axis, if to the right horizontal is 360 - To degrees (-1 to 1) else 180 + To degrees (-1 to 1)
 		target.x >= 0.0f ? m_AngleHorizontal = 360.0f - ToDegree(asin(target.z)) : m_AngleHorizontal = 180.0f + ToDegree(asin(target.z));
 	}
 	else
@@ -50,16 +55,16 @@ void Camera::Init()
 	m_OnLeftEdge  = false;
 	m_OnRightEdge = false;
 
-	m_MousePos.x = m_WindowWidth / 2;
-	m_MousePos.y = m_WindowHeight / 2;
+	m_MousePos.x = (float)m_WindowWidth / 2.0f;
+	m_MousePos.y = (float)m_WindowHeight / 2.0f;
 
-	glutWarpPointer(m_MousePos.x, m_MousePos.y);
+	glutWarpPointer((int)m_MousePos.x, (int)m_MousePos.y);
 }
 
 void Camera::OnMouse(int x, int y)
 {
-	const int deltaX = x - m_MousePos.x;
-	const int deltaY = y - m_MousePos.y;
+	const int deltaX = x - (int)m_MousePos.x;
+	const int deltaY = y - (int)m_MousePos.y;
 
 	m_MousePos.x = (float)x;
 	m_MousePos.y = (float)y;
