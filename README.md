@@ -1,4 +1,4 @@
 CudaBoids
 =========
 
-Flocking with Cuda
+Flocking with Cuda ^.^
